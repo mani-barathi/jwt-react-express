@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 
 // Routes
 import authRoutes from "./routes/auth.js"
+import profileRoutes from "./routes/profile.js"
 
 import { CORS_ORIGIN, MONGO_DB_URL, PORT } from "./constants.js"
 
@@ -23,6 +24,7 @@ const main = async () => {
     })
   )
 
+  app.use(express.static("public"))
   app.use(cookieParser())
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
@@ -30,6 +32,7 @@ const main = async () => {
   app.get("/", (_, res) => res.send("Hello World!"))
 
   app.use("/api/auth", authRoutes)
+  app.use("/api/profile", profileRoutes)
 
   app.listen(PORT, () => console.log(`URL: http://localhost:${PORT}`))
 }

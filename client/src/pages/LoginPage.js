@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { setAccessToken } from "../utils/token"
@@ -10,12 +10,20 @@ function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [loading, setloading] = useState(true)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (!loading) return
     if (auth.user) {
       history.replace("/")
+    } else {
+      setloading(false)
     }
-  }, [auth, history])
+  }, [auth, history, loading])
+
+  if (loading) {
+    return <h2 className="app__loading">Loading...</h2>
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault()

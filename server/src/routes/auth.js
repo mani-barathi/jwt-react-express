@@ -45,13 +45,13 @@ router.post("/refresh", async (req, res) => {
     return res.json({ ok: false, message: "no user exists with that token" })
   }
 
-  const { username, email, _id } = user
+  const { username, email, _id, imageUrl, bio } = user
   const { accessToken, refreshToken } = await createTokens({ username, _id })
   sendRefreshTokenAsCookie(res, refreshToken)
 
   return res.json({
     ok: true,
-    data: { accessToken, user: { _id, username, email } },
+    data: { accessToken, user: { _id, username, email, imageUrl, bio } },
   })
 })
 
@@ -101,12 +101,12 @@ router.post("/login", async (req, res) => {
   if (!isCorrectPassword)
     return res.json({ message: `Invalid Credentials`, ok: false })
 
-  const { username, email, _id } = user
+  const { username, email, _id, imageUrl, bio } = user
   const { accessToken, refreshToken } = await createTokens({ username, _id })
   sendRefreshTokenAsCookie(res, refreshToken)
   return res.json({
     ok: true,
-    data: { accessToken, user: { _id, username, email } },
+    data: { accessToken, user: { bio, username, email, _id, imageUrl } },
   })
 })
 

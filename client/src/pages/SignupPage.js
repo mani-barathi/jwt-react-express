@@ -37,6 +37,7 @@ function SignupPage() {
       console.log(data)
       setEmail("")
       setUsername("")
+      setError("Account created... now you can login")
     } catch (e) {
       console.log(e)
       alert(e)

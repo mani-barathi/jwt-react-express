@@ -21,11 +21,6 @@ router.get("/random", isAuthenticated, (req, res) => {
   })
 })
 
-// ME
-router.get("/me", isAuthenticated, (req, res) => {
-  return res.json({ ok: true, data: `hello ${req.user.username}!` })
-})
-
 /* (POST) verify the refresh token from cookie
  * returns - user, accessToken (sets new refreshToken in res as acookie)
  */
@@ -45,13 +40,13 @@ router.post("/refresh", async (req, res) => {
     return res.json({ ok: false, message: "no user exists with that token" })
   }
 
-  const { username, email, _id, imageUrl, bio } = user
+  const { username, email, _id } = user
   const { accessToken, refreshToken } = await createTokens({ username, _id })
   sendRefreshTokenAsCookie(res, refreshToken)
 
   return res.json({
     ok: true,
-    data: { accessToken, user: { _id, username, email, imageUrl, bio } },
+    data: { accessToken, user: { _id, username, email } },
   })
 })
 
@@ -101,12 +96,12 @@ router.post("/login", async (req, res) => {
   if (!isCorrectPassword)
     return res.json({ message: `Invalid Credentials`, ok: false })
 
-  const { username, email, _id, imageUrl, bio } = user
+  const { username, email, _id } = user
   const { accessToken, refreshToken } = await createTokens({ username, _id })
   sendRefreshTokenAsCookie(res, refreshToken)
   return res.json({
     ok: true,
-    data: { accessToken, user: { bio, username, email, _id, imageUrl } },
+    data: { accessToken, user: { username, email, _id } },
   })
 })
 

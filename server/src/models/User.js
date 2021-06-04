@@ -6,6 +6,10 @@ const UserSchema = new Schema({
   username: String,
   email: String,
   password: String,
+  tokenVersion: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const User = model("User", UserSchema)

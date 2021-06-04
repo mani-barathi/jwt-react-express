@@ -4,6 +4,7 @@ import bcrypt from "bcrypt"
 import User from "../models/User.js"
 import {
   createTokens,
+  revokeRefreshTokens,
   sendRefreshTokenAsCookie,
   verifyRefreshToken,
 } from "../utils/tokens.js"
@@ -40,10 +41,14 @@ router.post("/refresh", async (req, res) => {
     return res.json({ ok: false, message: "no user exists with that token" })
   }
 
-  const { username, email, _id } = user
-  const { accessToken, refreshToken } = await createTokens({ username, _id })
+  if (user.tokenVersion !== payload.tokenVersion) {
+    return res.json({ ok: false, message: "invalid token" })
+  }
+
+  const { accessToken, refreshToken } = await createTokens(user)
   sendRefreshTokenAsCookie(res, refreshToken)
 
+  const { username, email, _id } = user
   return res.json({
     ok: true,
     data: { accessToken, user: { _id, username, email } },
@@ -96,9 +101,10 @@ router.post("/login", async (req, res) => {
   if (!isCorrectPassword)
     return res.json({ message: `Invalid Credentials`, ok: false })
 
-  const { username, email, _id } = user
-  const { accessToken, refreshToken } = await createTokens({ username, _id })
+  const { accessToken, refreshToken } = await createTokens(user)
   sendRefreshTokenAsCookie(res, refreshToken)
+
+  const { username, email, _id } = user
   return res.json({
     ok: true,
     data: { accessToken, user: { username, email, _id } },

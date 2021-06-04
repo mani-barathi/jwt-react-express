@@ -12,6 +12,7 @@ const main = async () => {
   await mongoose.connect(MONGO_DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
 
   const app = express()

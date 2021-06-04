@@ -1,11 +1,18 @@
 import jwt from "jsonwebtoken"
 import { PROD, SECRET1, SECRET2, COOKIE_NAME } from "../constants.js"
+import User from "../models/User.js"
 
-export const createTokens = async (userObj) => {
-  const accessToken = await jwt.sign(userObj, SECRET1, {
+export const createTokens = async (user) => {
+  const { username, _id, tokenVersion } = user
+  const payload = { username, _id }
+
+  const accessToken = jwt.sign(payload, SECRET1, {
     expiresIn: "15s", // in a real app this should be in minutes, (I've set it in seconds just for testing)
   })
-  const refreshToken = await jwt.sign(userObj, SECRET2, {
+
+  // tokenVersion is needed only in refreshToken
+  payload.tokenVersion = tokenVersion
+  const refreshToken = jwt.sign(payload, SECRET2, {
     expiresIn: "7d",
   })
 
@@ -37,4 +44,11 @@ export const sendRefreshTokenAsCookie = (res, refreshToken) => {
     secure: PROD,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   })
+}
+
+// If the user has changed or forgotten the password
+// by inc the tokenVersion, all the previous refreshTokens will become invalid
+export const revokeRefreshTokens = async (_id) => {
+  await User.findOneAndUpdate({ _id }, { $inc: { tokenVersion: 1 } }).exec()
+  return true
 }

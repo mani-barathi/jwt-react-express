@@ -1,6 +1,7 @@
 import React from "react"
 import { Link, useHistory } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { baseUrl } from "../utils/authFetch"
 
 function Nav() {
   const history = useHistory()
@@ -8,7 +9,7 @@ function Nav() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/auth/logout", {
+      const response = await fetch(`${baseUrl}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       })

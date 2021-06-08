@@ -1,10 +1,13 @@
 import { getAccessToken, setAccessToken, isTokenExpired } from "./token"
 
+export const baseUrl =
+  process.env.REACT_APP_NODE_ENV === "production" ? "" : "http://localhost:4000"
+
 export const authFetch = async (url, options = {}) => {
   if (isTokenExpired()) {
     console.log("token expired")
     try {
-      const response = await fetch("http://localhost:4000/api/auth/refresh", {
+      const response = await fetch(`${baseUrl}/api/auth/refresh`, {
         method: "POST",
         credentials: "include",
       })
@@ -24,6 +27,7 @@ export const authFetch = async (url, options = {}) => {
   return fetch(url, {
     ...options,
     headers: {
+      ...options.headers,
       authorization: `Bearer ${getAccessToken()}`,
     },
   })

@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { baseUrl } from "../utils/authFetch"
 
 function SignupPage() {
   const history = useHistory()
@@ -21,7 +22,7 @@ function SignupPage() {
     setError(null)
     const payload = { username, email, password }
     try {
-      const response = await fetch("http://localhost:4000/api/auth/signup", {
+      const response = await fetch(`${baseUrl}/api/auth/signup`, {
         headers: {
           "Content-Type": "application/json",
         },

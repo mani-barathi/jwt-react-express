@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useAuth } from "../context/AuthContext"
-import { authFetch } from "../utils/authFetch"
+import { authFetch, baseUrl } from "../utils/authFetch"
 
 function ProfilePage() {
   const {
@@ -10,7 +10,7 @@ function ProfilePage() {
   const [random, setRandom] = useState(false)
 
   useEffect(() => {
-    authFetch("http://localhost:4000/api/auth/random")
+    authFetch(`${baseUrl}/api/auth/random`)
       .then((res) => res.json())
       .then((d) => setData(d))
       .catch((e) => console.log(e))

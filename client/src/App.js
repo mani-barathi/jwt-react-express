@@ -17,6 +17,7 @@ import Nav from "./components/Nav"
 import { useAuth } from "./context/AuthContext"
 import PrivateRoute from "./components/PrivateRoute"
 import { setAccessToken } from "./utils/token"
+import { baseUrl } from "./utils/authFetch"
 
 function App() {
   const history = useHistory()
@@ -25,7 +26,7 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/auth/refresh", {
+    fetch(`${baseUrl}/api/auth/refresh`, {
       method: "POST",
       credentials: "include",
     })

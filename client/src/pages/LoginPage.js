@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { baseUrl } from "../utils/authFetch"
 import { setAccessToken } from "../utils/token"
 
 function LoginPage() {
@@ -30,7 +31,7 @@ function LoginPage() {
     setError(null)
     const payload = { email, password }
     try {
-      const response = await fetch("http://localhost:4000/api/auth/login", {
+      const response = await fetch(`${baseUrl}/api/auth/login`, {
         headers: {
           "Content-Type": "application/json",
         },
